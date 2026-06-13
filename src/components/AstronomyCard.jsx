@@ -66,6 +66,13 @@ const AstronomyCard = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', minHeight: '100%', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
+        {['APOD', 'Planets', 'Galaxies', 'Moons'].map(cat => (
+          <span key={cat} style={{ background: cat === 'APOD' ? 'rgba(34, 211, 238, 0.2)' : 'rgba(255,255,255,0.05)', color: cat === 'APOD' ? '#22d3ee' : '#94a3b8', padding: '4px 10px', borderRadius: 12, fontSize: '0.75rem', cursor: 'pointer' }}>
+            {cat}
+          </span>
+        ))}
+      </div>
       <motion.img
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -77,7 +84,8 @@ const AstronomyCard = () => {
           borderRadius: 8,
           border: '1px solid rgba(34, 211, 238, 0.2)',
           objectFit: 'cover',
-          maxHeight: 220
+          maxHeight: 220,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.5)'
         }}
       />
       <div>
@@ -87,7 +95,7 @@ const AstronomyCard = () => {
         <h3 style={{ color: '#f8fafc', fontSize: '1rem', fontWeight: 600, marginBottom: 6 }}>
           {titleToShow}
         </h3>
-        <p style={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.5, maxHeight: 'calc(100% - 50px)', overflow: 'auto' }}>
+        <p style={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.5, maxHeight: '80px', overflow: 'auto' }}>
           {descriptionToShow}
         </p>
       </div>

@@ -91,7 +91,10 @@ const AsteroidCard = () => {
                   {ast.hazardous && '🔴 '}{ast.name}
                 </div>
                 <div style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 2 }}>
-                  Distance: {ast.distance}
+                  Dist: {ast.distance} | Vel: {ast.velocity}
+                </div>
+                <div style={{ color: '#64748b', fontSize: '0.75rem', marginTop: 1 }}>
+                  Approach: {ast.approachTime}
                 </div>
               </div>
               <div style={{ color: ast.hazardous ? '#ef4444' : '#22c55e', fontSize: '0.8rem', fontWeight: 600 }}>

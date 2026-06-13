@@ -12,7 +12,7 @@
   position: relative;
   display: grid;
   grid-template-columns: 280px minmax(520px, 1.4fr) 320px;
-  grid-template-rows: minmax(420px, 1fr) 180px 320px;
+  grid-template-rows: minmax(420px, 1fr) 180px 320px 320px 320px;
   gap: 20px;
   padding: 20px;
   overflow-y: auto;
@@ -96,6 +96,13 @@
   min-height: 280px;
   max-height: 320px;
 }
+
+.celestial-panel { grid-column: 1; grid-row: 4; min-height: 280px; max-height: 320px; }
+.spacex-panel { grid-column: 2; grid-row: 4; min-height: 280px; max-height: 320px; }
+.moon-panel { grid-column: 3; grid-row: 4; min-height: 280px; max-height: 320px; }
+.alerts-panel { grid-column: 1; grid-row: 5; min-height: 280px; max-height: 320px; }
+.solar-panel { grid-column: 2; grid-row: 5; min-height: 280px; max-height: 320px; }
+.time-panel { grid-column: 3; grid-row: 5; min-height: 280px; max-height: 320px; }
 
 /* Animations and Details */
 .pulse-dot {

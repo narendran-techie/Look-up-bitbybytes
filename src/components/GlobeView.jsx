@@ -3,7 +3,6 @@ import Globe from 'react-globe.gl';
 import * as THREE from 'three';
 import { SatelliteContext } from '../context/SatelliteContext';
 
-// Orbital data: { orbitalPeriod (minutes), inclination (degrees), raan (degrees), eccentricity }
 const ORBITAL_DATA = {
   ISS: { period: 90, inclination: 51.6, raan: 0, eccentricity: 0 },
   HUBBLE: { period: 96, inclination: 28.47, raan: 120, eccentricity: 0 },
@@ -11,6 +10,13 @@ const ORBITAL_DATA = {
   NOAA20: { period: 102, inclination: 99.1, raan: 60, eccentricity: 0 },
   GPS: { period: 720, inclination: 55, raan: 180, eccentricity: 0.02 }
 };
+
+const LAUNCH_SITES = [
+  { id: 'KSC', lat: 28.5728, lng: -80.6490, name: 'Kennedy Space Center', type: 'Launch Site', color: '#f59e0b', size: 0.06 },
+  { id: 'BC', lat: 25.9972, lng: -97.1561, name: 'Starbase Boca Chica', type: 'Launch Site', color: '#f59e0b', size: 0.06 },
+  { id: 'CSG', lat: 5.2393, lng: -52.7681, name: 'Guiana Space Centre', type: 'Launch Site', color: '#f59e0b', size: 0.06 },
+  { id: 'JSC', lat: 29.5502, lng: -95.097, name: 'Johnson Space Center', type: 'Research', color: '#10b981', size: 0.06 }
+];
 
 const GlobeView = () => {
   const globeRef = useRef();
@@ -326,7 +332,7 @@ const GlobeView = () => {
   // Generate points and labels data
   const pointsData = React.useMemo(() => {
     const time = timeRef.current;
-    return Object.keys(SATELLITES_DATA).map(satKey => {
+    const satPoints = Object.keys(SATELLITES_DATA).map(satKey => {
       const pos = calculateSatellitePosition(satKey, time);
       const satData = SATELLITES_DATA[satKey];
       return {
@@ -334,15 +340,36 @@ const GlobeView = () => {
         lat: pos.lat,
         lng: pos.lng,
         name: satData.name,
-        type: satData.type
+        type: satData.type,
+        color: satData.color,
+        alt: 0.02
       };
     });
+    
+    const staticPoints = LAUNCH_SITES.map(site => ({
+      ...site,
+      alt: 0.005
+    }));
+
+    // Moon simulation (far out)
+    const moonPos = calculateSatellitePosition('ISS', time / 28); // simplistic slow orbit
+    staticPoints.push({
+      id: 'MOON',
+      lat: moonPos.lat * 0.5,
+      lng: (moonPos.lng + 180) % 360,
+      name: 'Moon',
+      type: 'Celestial',
+      color: '#f1f5f9',
+      alt: 0.8 // High altitude
+    });
+
+    return [...satPoints, ...staticPoints];
   }, [renderTick]);
 
-  // Labels for satellites
+  // Labels for satellites and sites
   const labelsData = React.useMemo(() => {
     const time = timeRef.current;
-    return Object.keys(SATELLITES_DATA).map(satKey => {
+    const satLabels = Object.keys(SATELLITES_DATA).map(satKey => {
       const pos = calculateSatellitePosition(satKey, time);
       const satData = SATELLITES_DATA[satKey];
       return {
@@ -351,9 +378,33 @@ const GlobeView = () => {
         lng: pos.lng,
         text: satKey,
         size: selectedSatellite === satKey ? 1.2 : 0.7,
-        color: satData.color
+        color: satData.color,
+        alt: 0.15
       };
     });
+
+    const staticLabels = LAUNCH_SITES.map(site => ({
+      id: site.id,
+      lat: site.lat,
+      lng: site.lng,
+      text: site.id,
+      size: 0.6,
+      color: site.color,
+      alt: 0.05
+    }));
+
+    const moonPos = calculateSatellitePosition('ISS', time / 28);
+    staticLabels.push({
+      id: 'MOON',
+      lat: moonPos.lat * 0.5,
+      lng: (moonPos.lng + 180) % 360,
+      text: 'MOON',
+      size: 1.5,
+      color: '#f1f5f9',
+      alt: 0.85
+    });
+
+    return [...satLabels, ...staticLabels];
   }, [selectedSatellite, renderTick]);
 
   // Generate arcs for orbital paths
@@ -396,10 +447,12 @@ const GlobeView = () => {
         pointsData={pointsData}
         pointLat={d => d.lat}
         pointLng={d => d.lng}
-        pointAltitude={0.02}
-        pointColor={d => SATELLITES_DATA[d.id]?.color || '#ffffff'}
+        pointAltitude={d => d.alt || 0.02}
+        pointColor={d => d.color || '#ffffff'}
         pointRadius={d => {
+          if (d.id === 'MOON') return 0.25;
           if (d.id === 'ISS') return 0.15;
+          if (d.size) return d.size;
           if (selectedSatellite === d.id) return 0.12;
           return 0.08;
         }}
@@ -409,7 +462,7 @@ const GlobeView = () => {
         labelText={d => d.text}
         labelSize={d => d.size}
         labelColor={d => d.color}
-        labelAltitude={0.15}
+        labelAltitude={d => d.alt || 0.15}
         arcsData={arcsData}
         arcLat={d => d.lat}
         arcLng={d => d.lng}

@@ -8,10 +8,18 @@ import AstronomyCard from '../components/AstronomyCard';
 import AsteroidCard from '../components/AsteroidCard';
 import AIAssistant from '../components/AIAssistant';
 import VisibilityPanel from '../components/VisibilityPanel';
-import { Satellite, MapPin, Image as ImageIcon, AlertTriangle, Globe } from 'lucide-react';
+import CelestialDashboard from '../components/CelestialDashboard';
+import SpaceXTracker from '../components/SpaceXTracker';
+import MoonExplorer from '../components/MoonExplorer';
+import SmartAlertSystem from '../components/SmartAlertSystem';
+import TimeMachineMode from '../components/TimeMachineMode';
+import SolarSystemViewer from '../components/SolarSystemViewer';
+import { SatelliteContext } from '../context/SatelliteContext';
+import { Satellite, MapPin, Image as ImageIcon, AlertTriangle, Globe, Star, Rocket, Moon, Bell, Clock, Orbit } from 'lucide-react';
 import '../styles/dashboard.css';
 
 const Dashboard = () => {
+  const { intelligenceData } = React.useContext(SatelliteContext);
   return (
     <div className="dashboard-container">
       {/* Left Column */}
@@ -84,6 +92,63 @@ const Dashboard = () => {
         <div className="panel-desc">Asteroids approaching Earth with hazard status and distance information.</div>
         <AsteroidCard />
       </div>
+
+      {/* Row 4 */}
+      <div className="celestial-panel panel">
+        <div className="panel-header">
+          <Star size={16} />
+          <span>Celestial Events</span>
+        </div>
+        <div className="panel-desc">Upcoming eclipses, showers, and alignments.</div>
+        <CelestialDashboard />
+      </div>
+
+      <div className="spacex-panel panel">
+        <div className="panel-header">
+          <Rocket size={16} />
+          <span>SpaceX Launches</span>
+        </div>
+        <div className="panel-desc">Upcoming SpaceX missions and countdowns.</div>
+        <SpaceXTracker />
+      </div>
+
+      <div className="moon-panel panel">
+        <div className="panel-header">
+          <Moon size={16} />
+          <span>Moon Explorer</span>
+        </div>
+        <div className="panel-desc">Current lunar phase and visibility.</div>
+        <MoonExplorer moonData={intelligenceData?.astronomy} />
+      </div>
+
+      {/* Row 5 */}
+      <div className="alerts-panel panel">
+        <div className="panel-header">
+          <Bell size={16} />
+          <span>Smart Alerts</span>
+        </div>
+        <div className="panel-desc">Real-time event notifications for your location.</div>
+        <SmartAlertSystem locationData={intelligenceData} />
+      </div>
+
+      <div className="solar-panel panel">
+        <div className="panel-header">
+          <Orbit size={16} />
+          <span>Solar System</span>
+        </div>
+        <div className="panel-desc">Interactive planetary viewer.</div>
+        <SolarSystemViewer />
+      </div>
+
+      <div className="time-panel panel">
+        <div className="panel-header">
+          <Clock size={16} />
+          <span>Time Machine</span>
+        </div>
+        <div className="panel-desc">Simulate past and future sky events.</div>
+        <TimeMachineMode />
+      </div>
+
       {/* AI Assistant - Floating Button */}
       <AIAssistant />
     </div>
