@@ -1,0 +1,35 @@
+{
+  "success": true,
+  "count": 7,
+  "astronauts": [
+    {
+      "number": 1,
+      "name": "Sergey Kud-Sverchkov"
+    },
+    {
+      "number": 2,
+      "name": "Sergey Mikayev"
+    },
+    {
+      "number": 3,
+      "name": "Christoper Williams"
+    },
+    {
+      "number": 4,
+      "name": "Jessica Meir"
+    },
+    {
+      "number": 5,
+      "name": "Jack Hathaway"
+    },
+    {
+      "number": 6,
+      "name": "Sophie Adenot"
+    },
+    {
+      "number": 7,
+      "name": "Andrey Fedyaev"
+    }
+  ],
+  "lastUpdated": "2026-06-13T22:23:00.163Z"
+}
